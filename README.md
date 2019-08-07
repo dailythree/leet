@@ -1,2 +1,2 @@
 # leet
-practice at least 3 leetcode questions
+test practice at least 3 leetcode questions
