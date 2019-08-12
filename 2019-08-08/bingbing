@@ -1,0 +1,90 @@
+289. Game of Life
+class Solution {
+    public void gameOfLife(int[][] board) {
+        int m = board.length;
+        if (m == 0)
+            return;
+        int n = board[0].length;
+        //3: 1 -> 0, 4: 0 -> 1
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                int live = getLiveNegb(i, j, m, n, board);
+                if ((live < 2 || live > 3) && board[i][j] == 1)
+                    board[i][j] = 3;
+                if (live == 3 && board[i][j] == 0)
+                    board[i][j] = 4;
+            }
+        }
+        
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                if (board[i][j] == 3)
+                    board[i][j] = 0;
+                if (board[i][j] == 4)
+                    board[i][j] = 1;
+            }
+        }
+    }
+    
+    public int getLiveNegb(int x, int y, int m, int n, int[][] board) {
+        int count = 0;
+        for (int i = x - 1; i <= x + 1; i++) {
+            for (int j = y - 1; j <= y + 1; j++) {
+                if (i < 0 || j < 0 || i >= m || j >= n || (i == x && j == y))
+                    continue;
+                if (board[i][j] % 2 == 1)
+                    count++;
+            }
+        }
+        return count;
+    }
+}
+
+//68. Text Justification
+class Solution {
+    public List<String> fullJustify(String[] words, int maxWidth) {
+        int left = 0;
+        int right = 0;
+        int len;
+        List<String> res = new ArrayList<>();
+        while (left < words.length) {
+            len = words[left].length();
+            right = left + 1;
+            // append the words, record the length until it's exceed the max limitation
+            while (right < words.length && (len + 1 + words[right].length()) <= maxWidth) {
+                len += words[right++].length() + 1;
+            }
+            // if it's not the last line, evenly adjusted
+            StringBuilder sb = new StringBuilder();
+            int diff = right - left - 1;
+            if (right < words.length && diff != 0) {
+                int spaces = (maxWidth - len) / diff;
+                int extra = (maxWidth - len) % diff;
+                // System.out.println(spaces +  " " + right + " " + left);
+                for (int i = left; i < right; i++) {
+                    sb.append(words[i]);
+                    if (i < right - 1) {
+                        for (int j = 0; j <= spaces; j++) {
+                            sb.append(" ");
+                        }
+                        if (i - left < extra) {
+                            sb.append(" ");
+                        }
+                    }
+                }
+            } else {  // if it's the last line, left adjusted 
+                for (int i = left; i < right; i++) {
+                    sb.append(words[i] + " ");
+                }
+                sb.deleteCharAt(sb.length() - 1);
+                for (int i = sb.length(); i < maxWidth; i++) {
+                    sb.append(" ");
+                }
+            }
+            // System.out.println(sb.toString());
+            res.add(sb.toString());
+            left = right;
+        }
+        return res;
+    }
+}
